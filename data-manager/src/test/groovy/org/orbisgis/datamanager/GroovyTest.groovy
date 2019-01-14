@@ -43,7 +43,6 @@ import static org.junit.jupiter.api.Assertions.*
 
 class GroovyTest {
 
-
     @Test
     void loadH2GIS() {
         def h2GIS = H2GIS.open([databaseName: './target/loadH2GIS'])

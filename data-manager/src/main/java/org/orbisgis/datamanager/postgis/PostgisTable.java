@@ -41,8 +41,8 @@ import org.codehaus.groovy.runtime.InvokerHelper;
 import org.h2gis.utilities.TableLocation;
 import org.orbisgis.datamanagerapi.dataset.Database;
 import org.orbisgis.datamanagerapi.dataset.IJdbcTable;
-import org.orbisgis.postgis_jts.ResultSetWrapper;
-import org.orbisgis.postgis_jts.StatementWrapper;
+import org.h2gis.postgis_jts.ResultSetWrapper;
+import org.h2gis.postgis_jts.StatementWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

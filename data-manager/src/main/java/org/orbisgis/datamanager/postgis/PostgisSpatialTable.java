@@ -45,8 +45,8 @@ import org.locationtech.jts.geom.Geometry;
 import org.orbisgis.datamanagerapi.dataset.Database;
 import org.orbisgis.datamanagerapi.dataset.IJdbcTable;
 import org.orbisgis.datamanagerapi.dataset.ISpatialTable;
-import org.orbisgis.postgis_jts.ResultSetMetaDataWrapper;
-import org.orbisgis.postgis_jts.StatementWrapper;
+import org.h2gis.postgis_jts.ResultSetMetaDataWrapper;
+import org.h2gis.postgis_jts.StatementWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
