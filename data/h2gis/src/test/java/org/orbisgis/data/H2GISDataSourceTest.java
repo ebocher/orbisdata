@@ -101,12 +101,16 @@ class H2GISDataSourceTest {
         pgisProps.put("user", "orbisgis");
         pgisProps.put("password", "orbisgis");
         pgisProps.put("url", "jdbc:postgresql://localhost:5432/");
-        postgis = POSTGIS.open(pgisProps);
-        postgis.execute("DROP TABLE IF EXISTS test_postgis");
-        postgis.execute("CREATE TABLE test_postgis(id int, the_geom GEOMETRY, text varchar)");
-        postgis.execute("INSERT INTO test_postgis VALUES (1, 'POINT(0 0)', 'toto')");
-        postgis.execute("INSERT INTO test_postgis VALUES (2, 'LINESTRING(0 0, 1 1, 2 2)', 'tata')");
-        postgis.execute("INSERT INTO test_postgis VALUES (3, 'POINT(4 5)', 'titi')");
+        try {
+            postgis = POSTGIS.open(pgisProps);
+            postgis.execute("DROP TABLE IF EXISTS test_postgis");
+            postgis.execute("CREATE TABLE test_postgis(id int, the_geom GEOMETRY, text varchar)");
+            postgis.execute("INSERT INTO test_postgis VALUES (1, 'POINT(0 0)', 'toto')");
+            postgis.execute("INSERT INTO test_postgis VALUES (2, 'LINESTRING(0 0, 1 1, 2 2)', 'tata')");
+            postgis.execute("INSERT INTO test_postgis VALUES (3, 'POINT(4 5)', 'titi')");
+        }catch (Exception ex){
+            //Eat
+        }
         System.setProperty("test.postgis", Boolean.toString(postgis != null));
     }
 
@@ -868,7 +872,7 @@ class H2GISDataSourceTest {
         assertEquals(FIELD_SIZE, rsp.getMaxFieldSize());
     }
     @Test
-    @EnabledIfSystemProperty(named = "test.postgis", matches = "true")
+    @EnabledIfSystemProperty(named = "test.postgis", matches = "false")
     public void testDataSourceMethods() throws Exception {
         h2gis.execute("DROP TABLE IF EXISTS geodata; CREATE TABLE  geodata (ID INT, LAND VARCHAR, THE_GEOM GEOMETRY); " +
                 "INSERT INTO geodata VALUES (1, 'grass', 'POINT(0 0)'::GEOMETRY);");
@@ -879,6 +883,13 @@ class H2GISDataSourceTest {
         assertTrue(h2gis.isIndexed("geodata", "id"));
         h2gis.dropIndex("geodata", "id");
         assertFalse(h2gis.isIndexed("geodata", "id"));
+
+        assertTrue(h2gis.createIndex("geodata", "id", "land"));
+        assertTrue(h2gis.isIndexed("geodata", "id"));
+        assertTrue(h2gis.isIndexed("geodata", "land"));
+        h2gis.dropIndex("geodata", "id");
+        assertFalse(h2gis.isIndexed("geodata", "id"));
+        assertFalse(h2gis.isIndexed("geodata", "land"));
 
         assertTrue(h2gis.createSpatialIndex("geodata", "the_geom"));
         assertTrue(h2gis.isSpatialIndexed("geodata", "the_geom"));
@@ -909,5 +920,6 @@ class H2GISDataSourceTest {
         h2gis.dropTable(new ArrayList());
         h2gis.dropTable("","");
         assertTrue(h2gis.getColumnNames("geodata").isEmpty());
+
     }
 }

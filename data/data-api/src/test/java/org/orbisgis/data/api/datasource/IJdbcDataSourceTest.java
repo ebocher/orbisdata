@@ -642,6 +642,11 @@ public class IJdbcDataSourceTest {
         }
 
         @Override
+        public boolean createIndex(String tableName, String... columnNames) throws Exception {
+            return false;
+        }
+
+        @Override
         public boolean hasGeometryColumn(String tableName) {
             return false;
         }

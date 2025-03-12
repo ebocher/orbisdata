@@ -1124,15 +1124,34 @@ public abstract class JdbcDataSource extends Sql implements IJdbcDataSource, IRe
 
     @Override
     public boolean createIndex(String tableName, String columnName) {
-        if (columnName == null || tableName == null) {
-            LOGGER.error("Unable to create an index");
-            return false;
-        }
         try {
             return JDBCUtilities.createIndex(getConnection(), TableLocation.parse(tableName, getDataBaseType()), columnName);
         } catch (SQLException e) {
             LOGGER.error("Unable to create an index on the column '" + columnName + "' in the table '" + tableName + "'.\n" +
                     e.getLocalizedMessage());
+        }
+        return false;
+    }
+
+    @Override
+    public boolean createIndex(String tableName, String... columnNames) throws Exception {
+       Connection connection = getConnection();
+        if (connection != null && tableName != null && columnNames != null) {
+            TableLocation table = TableLocation.parse(tableName, getDataBaseType());
+            tableName = table.toString();
+            StringBuilder query = new StringBuilder();
+            query.append("CREATE INDEX IF NOT EXISTS " ).append(tableName).append("_")
+                    .append(String.join("_", columnNames)).append(" ON ").
+                    append(tableName).append( " ( ");
+            ArrayList<String> capsColumns = new ArrayList();
+            for (String column:columnNames){
+                capsColumns.add(TableLocation.capsIdentifier(column, getDataBaseType()));
+            }
+            query.append(String.join(",", capsColumns)).append(" )");
+            connection.createStatement().execute(query.toString());
+            return true;
+        } else {
+            LOGGER.error("Unable to create a multicolumn index on null inputs");
         }
         return false;
     }

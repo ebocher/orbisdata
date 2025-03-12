@@ -319,6 +319,13 @@ public interface IJdbcDataSource extends IDataSource<ResultSet>, GroovyObject, D
      */
     boolean createIndex(String tableName, String columnName) throws Exception;
 
+    /**
+     * Create a multicolumn indexes (also known as composite indexes)
+     * @param tableName name of the table
+     * @param columnNames names of the column
+     * @return
+     */
+    boolean createIndex(String tableName, String... columnNames) throws Exception;
 
     /**
      * Return true if the table has a geometry column.

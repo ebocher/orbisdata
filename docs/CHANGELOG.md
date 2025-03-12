@@ -2,3 +2,4 @@
 
 - Fix GitHub actions
 - Add entry to create an H2GIS in memory database
+- Add support to multicolumn index
