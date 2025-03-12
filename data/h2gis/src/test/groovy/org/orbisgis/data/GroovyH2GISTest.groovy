@@ -1123,4 +1123,28 @@ class GroovyH2GISTest {
                 DROP TABLE IF EXISTS $tableName;
         """)
     }
+
+    @Test
+    void testMemDatabase1() throws SQLException {
+        H2GIS h2GIS = H2GIS.mem("test")
+        assertNotNull(h2GIS)
+        h2GIS.execute("""DROP TABLE IF EXISTS geoTable;
+                          CREATE TABLE geoTable as select 'SRID=4326;POINT(0 0)'::GEOMETRY AS THE_GEOM
+                          """)
+        Geometry geom = h2GIS.firstRow("SELECT the_geom FROM geoTable").the_geom
+        assertNotNull(geom)
+        assertEquals(4326, geom.getSRID())
+    }
+
+    @Test
+    void testMemDatabase2() throws SQLException {
+        H2GIS h2GIS = H2GIS.mem()
+        assertNotNull(h2GIS)
+        h2GIS.execute("""DROP TABLE IF EXISTS geoTable;
+                          CREATE TABLE geoTable as select 'SRID=4326;POINT(0 0)'::GEOMETRY AS THE_GEOM
+                          """)
+        Geometry geom = h2GIS.firstRow("SELECT the_geom FROM geoTable").the_geom
+        assertNotNull(geom)
+        assertEquals(4326, geom.getSRID())
+    }
 }

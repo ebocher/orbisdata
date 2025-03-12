@@ -61,11 +61,9 @@ import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Implementation of the {@link JdbcDataSource} interface dedicated to the usage of an H2/H2GIS database.
@@ -496,5 +494,25 @@ public class H2GIS extends JdbcDataSource {
     @Override
     public Object asType(Class<?> clazz) {
         return null;
+    }
+
+
+    /**
+     * Create a memory database with a name
+     * @param db_name  name of the database
+     * @return {@link H2GIS} object if the DataBase has been successfully open, null otherwise.
+     */
+    public static H2GIS mem(String db_name) throws Exception {
+        Properties properties =  new Properties();
+        properties.put("url",  "jdbc:h2:mem:"+db_name);
+        return H2GIS.open(properties);
+    }
+
+    /**
+     * Create a memory database with a default name
+     * @return {@link H2GIS} object if the DataBase has been successfully open, null otherwise.
+     */
+    public static H2GIS mem() throws Exception {
+        return H2GIS.mem("h2gis_"+System.currentTimeMillis());
     }
 }
